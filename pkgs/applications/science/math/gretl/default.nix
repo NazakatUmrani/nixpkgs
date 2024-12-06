@@ -13,7 +13,6 @@
 , mpfr
 , openblas
 , readline
-, Accelerate
 , pkg-config
 }:
 
@@ -39,8 +38,6 @@ stdenv.mkDerivation (finalAttrs: {
     mpfr
     openblas
     readline
-  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-    Accelerate
   ];
 
   nativeBuildInputs = [
@@ -54,7 +51,7 @@ stdenv.mkDerivation (finalAttrs: {
   enableParallelInstalling = false;
 
   meta = {
-    description = "A software package for econometric analysis";
+    description = "Software package for econometric analysis";
     homepage = "https://gretl.sourceforge.net";
     license = lib.licenses.gpl3;
     longDescription = ''

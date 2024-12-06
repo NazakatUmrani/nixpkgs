@@ -11,14 +11,14 @@
 
 buildPythonPackage rec {
   pname = "libvirt";
-  version = "10.0.0";
+  version = "10.9.0";
   pyproject = true;
 
   src = fetchFromGitLab {
     owner = "libvirt";
     repo = "libvirt-python";
     rev = "v${version}";
-    hash = "sha256-zl1Hfm7flRflNjIpLoLAlPDysYlieC05HEd/mzFW8pU=";
+    hash = "sha256-/kjpB19X90btIewW+hjLjLagJvI5X2oIHXpcSZVtu2I=";
   };
 
   build-system = [ setuptools ];

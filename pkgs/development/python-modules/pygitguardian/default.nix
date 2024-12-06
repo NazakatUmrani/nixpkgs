@@ -2,11 +2,11 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  marshmallow,
   marshmallow-dataclass,
+  marshmallow,
+  pdm-backend,
   pytestCheckHook,
   pythonOlder,
-  pythonRelaxDepsHook,
   requests,
   responses,
   setuptools,
@@ -16,29 +16,32 @@
 
 buildPythonPackage rec {
   pname = "pygitguardian";
-  version = "1.14.0";
+  version = "1.18.0";
   pyproject = true;
 
-  disabled = pythonOlder "3.7";
+  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "GitGuardian";
     repo = "py-gitguardian";
     rev = "refs/tags/v${version}";
-    hash = "sha256-Uw65+YOnln+IOyT+RgqMEWt5cOZsaeS8Nu8U6ooivWA=";
+    hash = "sha256-4qMcBtelLiqLXKV8YIw9M6e97Nbo/K8UpsKoR0W7uKM=";
   };
 
-  pythonRelaxDeps = [ "marshmallow-dataclass" ];
-
-  nativeBuildInputs = [
-    pythonRelaxDepsHook
-    setuptools
+  pythonRelaxDeps = [
+    "marshmallow-dataclass"
+    "setuptools"
   ];
 
-  propagatedBuildInputs = [
+  build-system = [
+    pdm-backend
+  ];
+
+  dependencies = [
     marshmallow
     marshmallow-dataclass
     requests
+    setuptools
     typing-extensions
   ];
 
@@ -52,6 +55,7 @@ buildPythonPackage rec {
 
   disabledTests = [
     # Tests require an API key
+    "test_api_tokens"
     "test_bogus_rate_limit"
     "test_compute_sca_files"
     "test_content_scan_exceptions"
@@ -65,10 +69,15 @@ buildPythonPackage rec {
     "test_multiscan_parameters"
     "test_quota_overview"
     "test_rate_limit"
+    "test_read_metadata_bad_response"
+    "test_read_metadata_no_remediation_message"
+    "test_read_metadata_remediation_message"
+    "test_retrieve_secret_incident"
     "test_sca_client_scan_diff"
     "test_sca_scan_all_with_params"
     "test_sca_scan_directory_invalid_tar"
     "test_sca_scan_directory"
+    "test_scan"
     "test_versions_from_headers"
   ];
 

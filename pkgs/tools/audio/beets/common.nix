@@ -1,5 +1,4 @@
-{ stdenv
-, fetchpatch
+{ fetchpatch
 , bashInteractive
 , diffPlugins
 , glibcLocales
@@ -94,6 +93,7 @@ python3Packages.buildPythonApplication {
   nativeBuildInputs = [
     gobject-introspection
     sphinxHook
+    python3Packages.pydata-sphinx-theme
   ] ++ extraNativeBuildInputs;
 
   buildInputs = [
@@ -119,10 +119,13 @@ python3Packages.buildPythonApplication {
 
   nativeCheckInputs = with python3Packages; [
     pytestCheckHook
+    pytest-cov
     mock
     rarfile
     responses
   ] ++ pluginWrapperBins;
+
+  __darwinAllowLocalNetworking = true;
 
   disabledTestPaths = lib.flatten (attrValues (lib.mapAttrs (_: v: v.testPaths) disabledPlugins));
   inherit disabledTests;
@@ -172,7 +175,7 @@ EOF
     homepage = "https://beets.io";
     license = licenses.mit;
     maintainers = with maintainers; [ aszlig doronbehar lovesegfault pjones ];
-    platforms = platforms.linux;
+    platforms = platforms.linux ++ platforms.darwin;
     mainProgram = "beet";
   };
 }

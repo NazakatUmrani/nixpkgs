@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "mod_tile";
-  version = "0.7.1";
+  version = "0.7.2";
 
   src = fetchFromGitHub {
     owner = "openstreetmap";
     repo = "mod_tile";
     rev = "refs/tags/v${version}";
-    hash = "sha256-zXUwTG8cqAkY5MC1jAc2TtMgNMQPLc5nc22okVYP4ME=";
+    hash = "sha256-JC275LKsCeEo5DcIX0X7kcLoijQJqfJvBvw8xi2gwpk=";
   };
 
   nativeBuildInputs = [
@@ -64,6 +64,8 @@ stdenv.mkDerivation rec {
   installFlags = [ "DESTDIR=$(out)" ];
 
   doCheck = true;
+  # Do not run tests in parallel
+  enableParallelChecking = false;
 
   passthru.updateScript = nix-update-script { };
 

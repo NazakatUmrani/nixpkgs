@@ -28,6 +28,11 @@ buildPythonPackage rec {
     hash = "sha256-yl2+PcKr7xRW4oIBWl+gzh/nKhSNu5GH9fWKRGgaNHU=";
   };
 
+  patches = [
+    # https://github.com/pypa/flit/commit/6ab62c91d0db451b5e9ab000f0dba5471550b442.patch
+    ./python314-compat.patch
+  ];
+
   nativeBuildInputs = [ flit-core ];
 
   propagatedBuildInputs = [
@@ -55,7 +60,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     changelog = "https://github.com/pypa/flit/blob/${version}/doc/history.rst";
-    description = "A simple packaging tool for simple packages";
+    description = "Simple packaging tool for simple packages";
     mainProgram = "flit";
     homepage = "https://github.com/pypa/flit";
     license = licenses.bsd3;

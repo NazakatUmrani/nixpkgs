@@ -17,7 +17,7 @@ rustPlatform.buildRustPackage rec {
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ openssl curl sqlite ]
-    ++ lib.optional stdenv.isDarwin Security;
+    ++ lib.optional stdenv.hostPlatform.isDarwin Security;
 
   postInstall = ''
     substituteInPlace command-not-found.sh \
@@ -26,7 +26,7 @@ rustPlatform.buildRustPackage rec {
   '';
 
   meta = with lib; {
-    description = "A files database for nixpkgs";
+    description = "Files database for nixpkgs";
     homepage = "https://github.com/nix-community/nix-index";
     changelog = "https://github.com/nix-community/nix-index/blob/${src.rev}/CHANGELOG.md";
     license = with licenses; [ bsd3 ];

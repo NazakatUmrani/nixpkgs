@@ -731,9 +731,9 @@ in
 
     (mkIf cfg.enable {
 
-      boot.loader.grub.devices = optional (cfg.device != "") cfg.device;
+      boot.loader.grub.devices = mkIf (cfg.device != "") [ cfg.device ];
 
-      boot.loader.grub.mirroredBoots = optionals (cfg.devices != [ ]) [
+      boot.loader.grub.mirroredBoots = mkIf (cfg.devices != [ ]) [
         { path = "/boot"; inherit (cfg) devices; inherit (efi) efiSysMountPoint; }
       ];
 
@@ -771,7 +771,7 @@ in
       # set at once.
       system.boot.loader.id = "grub";
 
-      environment.systemPackages = optional (grub != null) grub;
+      environment.systemPackages = mkIf (grub != null) [ grub ];
 
       boot.loader.grub.extraPrepareConfig =
         concatStrings (mapAttrsToList (n: v: ''

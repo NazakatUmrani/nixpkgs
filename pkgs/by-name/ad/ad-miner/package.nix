@@ -1,29 +1,27 @@
-{ lib
-, python3
-, fetchFromGitHub
+{
+  lib,
+  python3,
+  fetchFromGitHub,
 }:
 
 python3.pkgs.buildPythonApplication rec {
   pname = "ad-miner";
-  version = "1.3.0";
+  version = "1.6.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "Mazars-Tech";
     repo = "AD_Miner";
     rev = "refs/tags/v${version}";
-    hash = "sha256-MoU38UEhk9eUa+slXnYG1eOyDW79J0q5XiM+1UYIGaM=";
+    hash = "sha256-/TIG1UUfLct9MxCmahWk7F6KlypNan+zk/02zVpPV+w=";
   };
 
   # All requirements are pinned
   pythonRelaxDeps = true;
 
-  nativeBuildInputs = with python3.pkgs; [
-    poetry-core
-    pythonRelaxDepsHook
-  ];
+  build-system = with python3.pkgs; [ poetry-core ];
 
-  propagatedBuildInputs = with python3.pkgs; [
+  dependencies = with python3.pkgs; [
     neo4j
     numpy
     pytz
@@ -33,9 +31,7 @@ python3.pkgs.buildPythonApplication rec {
   # Project has no tests
   doCheck = false;
 
-  pythonImportsCheck = [
-    "ad_miner"
-  ];
+  pythonImportsCheck = [ "ad_miner" ];
 
   meta = with lib; {
     description = "Active Directory audit tool that leverages cypher queries to crunch data from Bloodhound";

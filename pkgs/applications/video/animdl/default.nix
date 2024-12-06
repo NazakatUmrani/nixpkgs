@@ -2,7 +2,6 @@
   buildPythonApplication,
   fetchFromGitHub,
   poetry-core,
-  pythonRelaxDepsHook,
   anchor-kr,
   anitopy,
   click,
@@ -47,7 +46,6 @@ buildPythonApplication {
 
   nativeBuildInputs = [
     poetry-core
-    pythonRelaxDepsHook
   ];
   propagatedBuildInputs = [
     anchor-kr
@@ -69,7 +67,7 @@ buildPythonApplication {
   doCheck = true;
 
   meta = with lib; {
-    description = "A highly efficient, powerful and fast anime scraper";
+    description = "Highly efficient, powerful and fast anime scraper";
     homepage = "https://github.com/justfoolingaround/animdl";
     license = licenses.gpl3Only;
     mainProgram = "animdl";

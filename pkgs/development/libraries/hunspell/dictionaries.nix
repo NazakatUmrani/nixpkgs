@@ -697,12 +697,12 @@ rec {
   uk_UA = uk-ua;
   uk-ua = mkDict rec {
     pname = "hunspell-dict-uk-ua";
-    version = "4.6.3";
-    _version = "4-6.3";
+    version = "6.5.3";
+    _version = "1727974630";
 
     src = fetchurl {
-      url = "https://extensions.libreoffice.org/extensions/ukrainian-spelling-dictionary-and-thesaurus/${_version}/@@download/file/dict-uk_UA-${version}.oxt";
-      sha256 = "14rd07yx4fx2qxjr5xqc8qy151idd8k2hr5yi18d9r8gccnm9w50";
+      url = "https://extensions.libreoffice.org/assets/downloads/521/${_version}/dict-uk_UA-${version}.oxt";
+      hash = "sha256-c957WHJqaf/M2QrE2H3aIDAWGoQDnDl0na7sd+kUXNI=";
     };
 
     dictFileName = "uk_UA";
@@ -846,6 +846,18 @@ rec {
     };
   };
 
+  /* INDONESIA */
+
+  id_ID = id_id;
+  id_id = mkDictFromLibreOffice {
+    shortName = "id-id";
+    dictFileName = "id_ID";
+    sourceRoot = "id";
+    shortDescription = "Bahasa Indonesia (Indonesia)";
+    readmeFile = "README-dict.md";
+    license = with lib.licenses; [ lgpl21Only lgpl3Only ];
+  };
+
   /* CROATIAN */
 
   hr_HR = hr-hr;
@@ -968,6 +980,35 @@ rec {
     };
   };
 
+  /* ROMANIAN */
+  ro_RO = ro-ro;
+  ro-ro = mkDict rec {
+    pname = "hunspell-dict-ro-ro";
+    version = "3.3.10";
+    shortName = "ro-ro";
+    dictFileName = "ro_RO";
+    fileName = "${dictFileName}.${version}.zip";
+    shortDescription = "Romanian (Romania)";
+    readmeFile = "README";
+
+    src = fetchurl {
+      url = "mirror://sourceforge/rospell/${fileName}";
+      hash = "sha256-fxKNZOoGyeZxHDCxGMCv7vsBTY8zyS2szfRVq6LQRRk=";
+    };
+
+    nativeBuildInputs = [ unzip ];
+    unpackCmd = ''
+      unzip $src ${dictFileName}.aff ${dictFileName}.dic ${readmeFile} -d ${dictFileName}
+    '';
+
+    meta = {
+      description = "Hunspell dictionary for ${shortDescription} from rospell";
+      homepage = "https://sourceforge.net/projects/rospell/";
+      license = with lib.licenses; [ gpl2Only ];
+      maintainers = with lib.maintainers; [ Andy3153 ];
+    };
+  };
+
   /* Turkish */
   tr_TR = tr-tr;
   tr-tr = mkDict rec {
@@ -991,5 +1032,16 @@ rec {
       maintainers = with maintainers; [ samemrecebi ];
       platforms = platforms.all;
     };
+  };
+
+  /* GREEK */
+
+  el_GR = el-gr;
+  el-gr = mkDictFromLibreOffice {
+    shortName = "el-gr";
+    dictFileName = "el_GR";
+    shortDescription = "Greek (Greece)";
+    readmeFile = "README_el_GR.txt";
+    license = with lib.licenses; [ mpl11 gpl2 lgpl21 ];
   };
 }

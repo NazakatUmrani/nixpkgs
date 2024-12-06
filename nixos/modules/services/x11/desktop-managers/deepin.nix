@@ -47,7 +47,6 @@ in
       '';
 
       hardware.bluetooth.enable = mkDefault true;
-      hardware.pulseaudio.enable = mkDefault true;
       security.polkit.enable = true;
 
       services.deepin.dde-daemon.enable = mkForce true;
@@ -74,9 +73,7 @@ in
       xdg.icons.enable = true;
       xdg.portal.enable = mkDefault true;
       xdg.portal.extraPortals = mkDefault [
-        (pkgs.xdg-desktop-portal-gtk.override {
-          buildPortalsInGnome = false;
-        })
+        pkgs.xdg-desktop-portal-gtk
       ];
 
       # https://github.com/NixOS/nixpkgs/pull/247766#issuecomment-1722839259
@@ -98,11 +95,12 @@ in
         "/share/dsg"
         "/share/deepin-themes"
         "/share/deepin"
+        "/share/dde-shell"
       ];
 
       environment.etc = {
         "deepin-installer.conf".text = ''
-          system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
+          system_info_vendor_name="Copyright (c) 2003-2024 NixOS contributors"
         '';
       };
 
@@ -140,8 +138,10 @@ in
             dtkwidget
             dtkdeclarative
             qt5platform-plugins
+            qt6platform-plugins
+            qt5integration
+            qt6integration
             deepin-pw-check
-            deepin-turbo
 
             dde-account-faces
             deepin-icon-theme
@@ -152,7 +152,7 @@ in
             deepin-desktop-base
 
             startdde
-            dde-dock
+            dde-shell
             dde-launchpad
             dde-session-ui
             dde-session-shell
@@ -160,41 +160,35 @@ in
             dde-control-center
             dde-network-core
             dde-clipboard
-            dde-calendar
             dde-polkit-agent
             dpa-ext-gnomekeyring
             deepin-desktop-schemas
-            deepin-terminal
             deepin-kwin
             dde-session
             dde-widgets
             dde-appearance
             dde-application-manager
             deepin-service-manager
+            dde-api-proxy
+            dde-tray-loader
           ];
           optionalPackages = [
+            dde-calendar
+            dde-grand-search
+            deepin-terminal
             onboard # dde-dock plugin
             deepin-calculator
             deepin-compressor
             deepin-editor
-            deepin-picker
-            deepin-draw
-            deepin-music
-            deepin-movie-reborn
             deepin-system-monitor
             deepin-shortcut-viewer
-            # freeimage has knownVulnerabilties, don't install packages using freeiamge by default
-            # deepin-album
-            # deepin-camera
-            # deepin-image-viewer
-            # deepin-screen-recorder
           ];
         in
         requiredPackages
         ++ utils.removePackagesByName optionalPackages config.environment.deepin.excludePackages;
 
       services.dbus.packages = with pkgs.deepin; [
-        dde-dock
+        dde-shell
         dde-launchpad
         dde-session-ui
         dde-session-shell
@@ -209,9 +203,12 @@ in
         dde-appearance
         dde-application-manager
         deepin-service-manager
+        dde-grand-search
+        dde-api-proxy
       ];
 
       systemd.packages = with pkgs.deepin; [
+        dde-shell
         dde-launchpad
         dde-file-manager
         dde-calendar
@@ -222,6 +219,7 @@ in
         dde-session
         dde-application-manager
         deepin-service-manager
+        dde-api-proxy
       ];
     };
 }

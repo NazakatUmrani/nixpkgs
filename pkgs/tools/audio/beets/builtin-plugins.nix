@@ -1,21 +1,18 @@
-{ stdenv
-, aacgain
-, essentia-extractor
+{ aacgain
 , ffmpeg
 , flac
 , imagemagick
 , keyfinder-cli
-, lib
 , mp3gain
 , mp3val
 , python3Packages
-, version
 , ...
 }: {
   absubmit = {
     deprecated = true;
     testPaths = [ ];
   };
+
   acousticbrainz.propagatedBuildInputs = [ python3Packages.requests ];
   albumtypes = { };
   aura = {
@@ -87,7 +84,7 @@
   mbcollection.testPaths = [ ];
   mbsubmit = { };
   mbsync = { };
-  metasync = { };
+  metasync.testPaths = [ ];
   missing.testPaths = [ ];
   mpdstats.propagatedBuildInputs = [ python3Packages.mpd2 ];
   mpdupdate = {
@@ -119,12 +116,10 @@
     propagatedBuildInputs = with python3Packages; [ pillow pyxdg ];
     wrapperBins = [ imagemagick ];
   };
-  types.testPaths = [ "test/test_types_plugin.py" ];
+  types.testPaths = [ "test/plugins/test_types_plugin.py" ];
   unimported.testPaths = [ ];
   web.propagatedBuildInputs = [ python3Packages.flask ];
   zero = { };
-  # NOTE: Condition can be removed once stable beets updates
-} // lib.optionalAttrs ((lib.versions.majorMinor version) != "1.6") {
   limit = { };
   substitute = {
     testPaths = [ ];
@@ -133,6 +128,11 @@
     testPaths = [ ];
   };
   autobpm = {
+    propagatedBuildInputs = with python3Packages; [
+      librosa
+      # An optional dependency of librosa, needed for beets' autobpm
+      resampy
+    ];
     testPaths = [ ];
   };
   listenbrainz = {

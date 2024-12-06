@@ -2,14 +2,19 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  pythonOlder,
+
+  # build-system
+  setuptools,
+
+  # dependencies
   numpy,
   scikit-learn,
   termcolor,
   tqdm,
   pandas,
-  setuptools,
-  # test dependencies
+
+  # tests
+  cleanvision,
   datasets,
   fasttext,
   hypothesis,
@@ -22,20 +27,19 @@
   torch,
   torchvision,
   wget,
+  pythonAtLeast,
 }:
 
 buildPythonPackage rec {
   pname = "cleanlab";
-  version = "2.6.5";
+  version = "2.7.0";
   pyproject = true;
-
-  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "cleanlab";
     repo = "cleanlab";
     rev = "refs/tags/v${version}";
-    hash = "sha256-wehvGh27Ey1YK+eWTjT6jRwa7yqPpx3P0HUNePoljpw=";
+    hash = "sha256-0kCEIHNOXIkdwDH5zCVWnR/W79ppc/1PFsJ/a4goGzk=";
   };
 
   build-system = [ setuptools ];
@@ -56,6 +60,7 @@ buildPythonPackage rec {
   doCheck = true;
 
   nativeCheckInputs = [
+    cleanvision
     datasets
     fasttext
     hypothesis
@@ -70,10 +75,17 @@ buildPythonPackage rec {
     wget
   ];
 
-  disabledTests = [
-    # Requires the datasets we prevent from downloading
-    "test_create_imagelab"
-  ];
+  disabledTests =
+    [
+      # Requires the datasets we prevent from downloading
+      "test_create_imagelab"
+    ]
+    ++ lib.optionals (pythonAtLeast "3.12") [
+      # AttributeError: 'called_once_with' is not a valid assertion.
+      # Use a spec for the mock if 'called_once_with' is meant to be an attribute..
+      # Did you mean: 'assert_called_once_with'?
+      "test_custom_issue_manager_not_registered"
+    ];
 
   disabledTestPaths = [
     # Requires internet
@@ -85,7 +97,7 @@ buildPythonPackage rec {
   ];
 
   meta = {
-    description = "The standard data-centric AI package for data quality and machine learning with messy, real-world data and labels.";
+    description = "Standard data-centric AI package for data quality and machine learning with messy, real-world data and labels";
     homepage = "https://github.com/cleanlab/cleanlab";
     changelog = "https://github.com/cleanlab/cleanlab/releases/tag/v${version}";
     license = lib.licenses.agpl3Only;

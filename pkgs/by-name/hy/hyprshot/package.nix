@@ -7,6 +7,8 @@
 , slurp
 , wl-clipboard
 , libnotify
+, withFreeze ? true
+, hyprpicker
 , makeWrapper
 }:
 
@@ -28,16 +30,16 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     install -Dm755 hyprshot -t "$out/bin"
     wrapProgram "$out/bin/hyprshot" \
-      --prefix PATH ":" ${lib.makeBinPath [
+      --prefix PATH ":" ${lib.makeBinPath ([
           hyprland jq grim slurp wl-clipboard libnotify
-        ]}
+        ] ++ lib.optionals withFreeze [ hyprpicker ])}
 
     runHook postInstall
   '';
 
   meta = with lib; {
     homepage = "https://github.com/Gustash/hyprshot";
-    description = "Hyprshot is an utility to easily take screenshots in Hyprland using your mouse.";
+    description = "Hyprshot is an utility to easily take screenshots in Hyprland using your mouse";
     license = licenses.gpl3Only;
     maintainers = with maintainers; [ Cryolitia ];
     mainProgram = "hyprshot";

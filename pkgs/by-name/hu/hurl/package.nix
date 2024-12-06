@@ -1,26 +1,28 @@
 { lib
 , rustPlatform
 , fetchFromGitHub
+, fetchpatch
 , pkg-config
 , installShellFiles
 , libxml2
 , openssl
 , stdenv
 , curl
+, versionCheckHook
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "hurl";
-  version = "4.3.0";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
     owner = "Orange-OpenSource";
-    repo = pname;
-    rev = version;
-    hash = "sha256-gSkiNwRR47CZ1YjVa5o8EByCzWBAYPfsMRXydTwFwp0=";
+    repo = "hurl";
+    rev = "refs/tags/${version}";
+    hash = "sha256-zrZWYnXUuzf2cS3n56/hWDvyXVM4Y/34SOlMPrtAhJo=";
   };
 
-  cargoHash = "sha256-dY00xcMnOCWhdRzC+3mTHSIqeYEPUDBJeYd/GiLM/38=";
+  cargoHash = "sha256-IuxTuIU9/6BpAXXunJ1Jjz3FPYRVPFNQhBqVAzMjNro=";
 
   nativeBuildInputs = [
     pkg-config
@@ -30,12 +32,15 @@ rustPlatform.buildRustPackage rec {
   buildInputs = [
     libxml2
     openssl
-  ] ++ lib.optionals stdenv.isDarwin [
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
     curl
   ];
 
-  # Tests require network access to a test server
+  nativeInstallCheckInputs = [ versionCheckHook ];
+
+  # The actual tests require network access to a test server, but we can run an install check
   doCheck = false;
+  doInstallCheck = true;
 
   postInstall = ''
     installManPage docs/manual/hurl.1 docs/manual/hurlfmt.1

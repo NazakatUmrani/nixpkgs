@@ -21,7 +21,7 @@
 
 buildPythonPackage rec {
   pname = "wtforms";
-  version = "3.1.2";
+  version = "3.2.1";
   pyproject = true;
 
   disabled = pythonOlder "3.7";
@@ -30,7 +30,7 @@ buildPythonPackage rec {
     owner = "wtforms";
     repo = "wtforms";
     rev = "refs/tags/${version}";
-    hash = "sha256-L6DmB7iVpJR775oRxuEkCKWlUJnmw8VPZTr2dZbqeEc=";
+    hash = "sha256-jwjP/wkk8MdNJbPE8MlkrH4DyR304Ju41nN4lMo3jFs=";
   };
 
   nativeBuildInputs = [
@@ -41,18 +41,18 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [ markupsafe ];
 
-  passthru.optional-dependencies = {
+  optional-dependencies = {
     email = [ email-validator ];
   };
 
   nativeCheckInputs = [
     pytestCheckHook
-  ] ++ lib.flatten (lib.attrValues passthru.optional-dependencies);
+  ] ++ lib.flatten (lib.attrValues optional-dependencies);
 
   pythonImportsCheck = [ "wtforms" ];
 
   meta = with lib; {
-    description = "A flexible forms validation and rendering library for Python";
+    description = "Flexible forms validation and rendering library for Python";
     homepage = "https://github.com/wtforms/wtforms";
     changelog = "https://github.com/wtforms/wtforms/blob/${version}/CHANGES.rst";
     license = licenses.bsd3;

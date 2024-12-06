@@ -33,11 +33,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "apt";
-  version = "2.9.4";
+  version = "2.9.16";
 
   src = fetchurl {
     url = "mirror://debian/pool/main/a/apt/apt_${finalAttrs.version}.tar.xz";
-    hash = "sha256-Ra6jeJM7nkaPZWBR7Sv8+TurArs1D5TodUcn6xe0B6Q=";
+    hash = "sha256-9ncx162Jm4WZBYFPvtO03ic8/rhcGEUEPxR4x1LsnvQ=";
   };
 
   # cycle detection; lib can't be split
@@ -92,7 +92,7 @@ stdenv.mkDerivation (finalAttrs: {
     changelog = "https://salsa.debian.org/apt-team/apt/-/raw/${finalAttrs.version}/debian/changelog";
     license = with lib.licenses; [ gpl2Plus ];
     mainProgram = "apt";
-    maintainers = with lib.maintainers; [ AndersonTorres ];
+    maintainers = with lib.maintainers; [ ];
     platforms = lib.platforms.linux;
   };
 })

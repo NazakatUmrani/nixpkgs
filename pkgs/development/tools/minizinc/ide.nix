@@ -1,22 +1,22 @@
 { lib, stdenv, fetchFromGitHub, qtbase, qmake, qtwebsockets, minizinc, makeWrapper, Cocoa }:
 
 let
-  executableLoc = if stdenv.isDarwin then "$out/Applications/MiniZincIDE.app/Contents/MacOS/MiniZincIDE" else "$out/bin/MiniZincIDE";
+  executableLoc = if stdenv.hostPlatform.isDarwin then "$out/Applications/MiniZincIDE.app/Contents/MacOS/MiniZincIDE" else "$out/bin/MiniZincIDE";
 in
 stdenv.mkDerivation rec {
   pname = "minizinc-ide";
-  version = "2.8.4";
+  version = "2.8.7";
 
   src = fetchFromGitHub {
     owner = "MiniZinc";
     repo = "MiniZincIDE";
     rev = version;
-    hash = "sha256-ljOtY4k0uQwb8YPH14DspofjY7kMMBu4QJ7MABYfIpA=";
+    hash = "sha256-mlLW7RHwO+VHWJdKhDjIWYoRpdTrt7QpPKp0EiHGkEs=";
     fetchSubmodules = true;
   };
 
   nativeBuildInputs = [ qmake makeWrapper ];
-  buildInputs = [ qtbase qtwebsockets ] ++ lib.optionals stdenv.isDarwin [ Cocoa ];
+  buildInputs = [ qtbase qtwebsockets ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ Cocoa ];
 
   sourceRoot = "${src.name}/MiniZincIDE";
 

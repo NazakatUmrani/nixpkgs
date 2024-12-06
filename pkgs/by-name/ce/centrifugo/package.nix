@@ -14,16 +14,16 @@ let
 in
 buildGoModule rec {
   pname = "centrifugo";
-  version = "5.4.0";
+  version = "5.4.7";
 
   src = fetchFromGitHub {
     owner = "centrifugal";
     repo = "centrifugo";
     rev = "v${version}";
-    hash = "sha256-sSEainZXgZ26u4J0FXVM8Je1uwDrAOkzLMgrCUtOx74=";
+    hash = "sha256-hAZT2jqDy0oppKxuLWg6UQxiCySLkPE0eLmqavaRN9I=";
   };
 
-  vendorHash = "sha256-kPnkuBOcTDuAWD51JGJvgHLj9jn9kHZOfPw/DF64Mn8=";
+  vendorHash = "sha256-Xz8s3R2nOouEyH56y04X15nYtMRwL8toP/8WL0saYwQ=";
 
   ldflags = [
     "-s"
@@ -43,7 +43,7 @@ buildGoModule rec {
       inherit (nixosTests) centrifugo;
       version = testers.testVersion {
         package = centrifugo;
-        command = "${pname} version";
+        command = "centrifugo version";
         version = "v${version}";
       };
     };

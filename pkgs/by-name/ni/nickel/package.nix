@@ -1,29 +1,22 @@
 { lib
 , rustPlatform
 , fetchFromGitHub
-, stdenv
 , python3
 , nix-update-script
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "nickel";
-  version = "1.6.0";
+  version = "1.9.0";
 
   src = fetchFromGitHub {
     owner = "tweag";
     repo = "nickel";
     rev = "refs/tags/${version}";
-    hash = "sha256-AL5YkdITO9CPFYzMGQwHbuFZrMDUvF1yTt2XTotoymM=";
+    hash = "sha256-chIpZqs1tyXk4YQBlF4K/Ofrn1CrijbYant9+SSppGU=";
   };
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-    outputHashes = {
-      "topiary-core-0.3.0" = "sha256-KWfgbVFV2zbCuNNFp9yeSgAa0Cc7cT090KK2J1ynfKg=";
-      "tree-sitter-nickel-0.1.0" = "sha256-WuY6X1mnXdjiy4joIcY8voK2sqICFf0GvudulZ9lwqg=";
-    };
-  };
+  cargoHash = "sha256-MaMzwvvWP+vmdBVCefXI6dehuTyPcPW2b6KdarxjBjA=";
 
   cargoBuildFlags = [ "-p nickel-lang-cli" "-p nickel-lang-lsp" ];
 
@@ -32,6 +25,16 @@ rustPlatform.buildRustPackage rec {
   ];
 
   outputs = [ "out" "nls" ];
+
+  # This fixes the way comrak is defined as a dependency, without the sed the build fails:
+  #
+  # cargo metadata failure: error: Package `nickel-lang-core v0.10.0
+  # (/build/source/core)` does not have feature `comrak`. It has an optional
+  # dependency with that name, but that dependency uses the "dep:" syntax in
+  # the features table, so it does not have an implicit feature with that name.
+  preBuild = ''
+    sed -i 's/dep:comrak/comrak/' core/Cargo.toml
+  '';
 
   postInstall = ''
     mkdir -p $nls/bin
@@ -53,7 +56,7 @@ rustPlatform.buildRustPackage rec {
     '';
     changelog = "https://github.com/tweag/nickel/blob/${version}/RELEASES.md";
     license = licenses.mit;
-    maintainers = with maintainers; [ AndersonTorres felschr matthiasbeyer ];
+    maintainers = with maintainers; [ felschr matthiasbeyer ];
     mainProgram = "nickel";
   };
 }

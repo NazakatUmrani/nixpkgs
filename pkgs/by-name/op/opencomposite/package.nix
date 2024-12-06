@@ -1,39 +1,37 @@
-{ lib
-, stdenv
-, fetchFromGitLab
-
-, cmake
-
-, glm
-, libGL
-, openxr-loader
-, python3
-, vulkan-headers
-, vulkan-loader
-, xorg
-
-, unstableGitUpdater
+{
+  cmake,
+  fetchFromGitLab,
+  glm,
+  jsoncpp,
+  lib,
+  libGL,
+  python3,
+  stdenv,
+  unstableGitUpdater,
+  vulkan-headers,
+  vulkan-loader,
+  xorg,
+  openxr-loader,
 }:
 
 stdenv.mkDerivation {
   pname = "opencomposite";
-  version = "0-unstable-2024-05-24";
+  version = "0-unstable-2024-10-28";
 
   src = fetchFromGitLab {
     owner = "znixian";
     repo = "OpenOVR";
-    rev = "762f93d91f4c23ad70c81c81486b6bcd7e9bbb5e";
-    hash = "sha256-Z1Is+yjyAG8X5+FWaxtCkF7paRGV9ZlNVubuVkeO7yg=";
+    rev = "e162c7e9be2521a357fba4bee13af85437a1027b";
+    fetchSubmodules = true;
+    hash = "sha256-+suq0gV8zRDhF3ApnzQCC/5st59VniU6v7TcDdght6Q=";
   };
 
-  nativeBuildInputs = [
-    cmake
-  ];
+  nativeBuildInputs = [ cmake ];
 
   buildInputs = [
     glm
+    jsoncpp
     libGL
-    openxr-loader
     python3
     vulkan-headers
     vulkan-loader
@@ -41,10 +39,10 @@ stdenv.mkDerivation {
   ];
 
   cmakeFlags = [
-    (lib.cmakeBool "USE_SYSTEM_OPENXR" true)
-    (lib.cmakeBool "USE_SYSTEM_GLM" true)
-    # debug logging macros cause format-security warnings
     (lib.cmakeFeature "CMAKE_CXX_FLAGS" "-Wno-error=format-security")
+    # See https://gitlab.com/znixian/OpenOVR/-/issues/416
+    (lib.cmakeBool "USE_SYSTEM_OPENXR" false)
+    (lib.cmakeBool "USE_SYSTEM_GLM" true)
   ];
 
   installPhase = ''
@@ -59,10 +57,12 @@ stdenv.mkDerivation {
     branch = "openxr";
   };
 
-  meta = with lib; {
+  meta = {
     description = "Reimplementation of OpenVR, translating calls to OpenXR";
     homepage = "https://gitlab.com/znixian/OpenOVR";
-    license = with licenses; [ gpl3Only ];
-    maintainers = with maintainers; [ Scrumplex ];
+    license = with lib.licenses; [ gpl3Only ];
+    maintainers = with lib.maintainers; [ Scrumplex ];
+    # This can realistically only work on systems that support OpenXR Loader
+    inherit (openxr-loader.meta) platforms;
   };
 }

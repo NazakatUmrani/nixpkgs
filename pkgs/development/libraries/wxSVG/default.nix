@@ -40,20 +40,20 @@ stdenv.mkDerivation rec {
     libexif
     pango
     wxGTK
-  ] ++ lib.optional stdenv.isDarwin Cocoa;
+  ] ++ lib.optional stdenv.hostPlatform.isDarwin Cocoa;
 
   enableParallelBuilding = true;
 
   meta = with lib; {
     homepage = "https://wxsvg.sourceforge.net/";
-    description = "A SVG manipulation library built with wxWidgets";
+    description = "SVG manipulation library built with wxWidgets";
     mainProgram = "svgview";
     longDescription = ''
       wxSVG is C++ library to create, manipulate and render Scalable Vector
       Graphics (SVG) files with the wxWidgets toolkit.
     '';
     license = licenses.gpl2Plus;
-    maintainers = [ maintainers.AndersonTorres ];
+    maintainers = [ ];
     inherit (wxGTK.meta) platforms;
   };
 }

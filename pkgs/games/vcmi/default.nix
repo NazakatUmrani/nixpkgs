@@ -28,14 +28,14 @@
 
 stdenv.mkDerivation rec {
   pname = "vcmi";
-  version = "1.5.2";
+  version = "1.5.7";
 
   src = fetchFromGitHub {
     owner = "vcmi";
     repo = "vcmi";
     rev = version;
     fetchSubmodules = true;
-    hash = "sha256-Hn3qNTWFU3SMBTJxA2owsAQqIl9wZy33B2Mp4UdlLn4=";
+    hash = "sha256-Op5cnp/gO3PPv/QyrashFDBCyqwlO6wkv5Ni5jpRWd8=";
   };
 
   nativeBuildInputs = [
@@ -91,7 +91,7 @@ stdenv.mkDerivation rec {
   };
 
   meta = with lib; {
-    description = "An open-source engine for Heroes of Might and Magic III";
+    description = "Open-source engine for Heroes of Might and Magic III";
     homepage = "https://vcmi.eu";
     changelog = "https://github.com/vcmi/vcmi/blob/${src.rev}/ChangeLog.md";
     license = with licenses; [ gpl2Plus cc-by-sa-40 ];
